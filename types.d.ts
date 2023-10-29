@@ -1,9 +1,9 @@
 import { ActionOnEventConfigs } from "trans-render/froop/types";
 import {IBE} from 'be-enhanced/types';
 
-export interface EndUserProps extends IBE<HTMLSlotElement>{
-    Of?: Array<AboutStatement>,
-    of?: Array<AboutStatement>
+export interface EndUserProps extends IBE{
+    About?: Array<AboutStatement>,
+    about?: Array<AboutStatement>
 }
 
 export interface AllProps extends EndUserProps{
@@ -23,8 +23,7 @@ export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>];
 
 export interface Actions{
     onCamelized(self: this): ProPAP;
-    hydrate(self: this): POA;
-    getProps(self: this, e?: Event): ProPAP;
+    hydrate(self: this): PAP;
     noAttrs(self: this): ProPAP;
 }
 
