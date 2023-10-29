@@ -8,7 +8,7 @@ export interface EndUserProps extends IBE<HTMLSlotElement>{
 
 export interface AllProps extends EndUserProps{
     isParsed?: boolean,
-    propSlotRules?: Array<SessionStorageRule>,
+    sessionStorageRules?: Array<SessionStorageRule>,
 }
 
 export type AboutStatement = string;
