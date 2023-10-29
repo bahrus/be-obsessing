@@ -1,8 +1,9 @@
-# be-obsessing
+# be-obsessing [TODO]
 
 Read and update session storage (parsing via JSON).
 
 ```html
-<meta be-obsessing='of my storage as $ my prop.'>
-<meta itemprop=myProp>
+<meta itemprop=myProp be-obsessing='about myStorage : my subsection.'>
 ```
+
+... reads JSON.parse(sessionStorage.getItem('myStorage')).mySubsection
