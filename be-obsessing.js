@@ -49,6 +49,9 @@ export class BeObsessing extends BE {
                     signal[prop] = sessionStorage.getItem(remoteProp);
                 };
                 window.addEventListener(session_storage_item_set, e => {
+                    const key = e.detail.key;
+                    if (key !== remoteProp)
+                        return;
                     updateEnhEl();
                 });
             }
