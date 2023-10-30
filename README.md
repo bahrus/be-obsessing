@@ -2,7 +2,7 @@
 
 Read and update session storage (parsing via JSON).
 
-Example 1a:
+## Example 1a:
 
 ```html
 <meta itemprop=myProp be-obsessing>
@@ -11,6 +11,8 @@ Example 1a:
 ... reads JSON.parse(sessionStorage.getItem('myProp')).  Same in reverse (but faster to set oMeta.beValueAdded.value = ...)
 
 Watches for content property, and keeps in sync.
+
+## Example 1b:
 
 ```html
 <meta itemprop=myProp be-obsessing='about myStorage : my subsection.'>

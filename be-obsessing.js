@@ -1,6 +1,9 @@
 import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
+import { getRemoteProp, getLocalSignal } from 'be-linked/defaults.js';
+import { init } from './api.js';
+init();
 export class BeObsessing extends BE {
     static get beConfig() {
         return {
@@ -10,10 +13,9 @@ export class BeObsessing extends BE {
         };
     }
     async noAttrs(self) {
-        const sessionStorageRules = [];
-        throw 'NI';
+        const { enhancedElement } = self;
         return {
-            sessionStorageRules: []
+            sessionStorageRules: [{}]
         };
     }
     async onCamelized(self) {
@@ -27,11 +29,27 @@ export class BeObsessing extends BE {
             sessionStorageRules
         };
     }
-    hydrate(self) {
-        throw 'NI';
+    async hydrate(self) {
+        const { enhancedElement, sessionStorageRules } = self;
+        for (const rule of sessionStorageRules) {
+            const { key } = rule;
+            if (key === undefined) {
+                const localSignal = await getLocalSignal(enhancedElement);
+                const remoteProp = getRemoteProp(enhancedElement);
+                console.log({ localSignal, remoteProp });
+                const { signal, type, prop } = localSignal;
+                const updateSSFn = () => {
+                    debugger;
+                    sessionStorage.setItem(remoteProp, signal[prop]);
+                };
+                updateSSFn();
+            }
+        }
         return {
             resolved: true
         };
+    }
+    passToLocal(self, newVal) {
     }
 }
 const tagName = 'be-obsessing';

@@ -23,10 +23,16 @@ export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>];
 
 export interface Actions{
     onCamelized(self: this): ProPAP;
-    hydrate(self: this): PAP;
+    hydrate(self: this): ProPAP;
     noAttrs(self: this): ProPAP;
 }
 
 export interface SessionStorageRule{
     key: string,
+}
+
+export interface ISessionStorageItemSetEventDetail {
+    key: string,
+    oldValue: any,
+    newValue: any
 }

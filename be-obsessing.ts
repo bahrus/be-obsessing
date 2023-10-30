@@ -3,6 +3,9 @@ import {BEConfig} from 'be-enhanced/types';
 import {XE} from 'xtal-element/XE.js';
 import {Actions, AllProps, AP, PAP, ProPAP, POA, SessionStorageRule} from './types';
 import {register} from 'be-hive/register.js';
+import {getRemoteProp, getLocalSignal} from 'be-linked/defaults.js';
+import {init} from './api.js';
+init();
 
 export class BeObsessing extends BE<AP, Actions> implements Actions{
     static override get beConfig(){
@@ -12,12 +15,12 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
             isParsedProp: 'isParsed'
         } as BEConfig;
     }
-
     async noAttrs(self: this): ProPAP {
-        const sessionStorageRules: Array<SessionStorageRule> = [];
-        throw 'NI';
+        const {enhancedElement} = self;
+        
         return {
-            sessionStorageRules: []
+            sessionStorageRules: [{
+            }] as Array<SessionStorageRule>
         };
     }
 
@@ -33,12 +36,29 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
         }
     }
 
-    hydrate(self: this){
-        throw 'NI';
+    async hydrate(self: this){
+        const {enhancedElement, sessionStorageRules} = self;
+        for(const rule of sessionStorageRules!){
+            const {key} = rule;
+            if(key === undefined){
+                const localSignal = await getLocalSignal(enhancedElement);
+                const remoteProp = getRemoteProp(enhancedElement);
+                console.log({localSignal, remoteProp});
+                const {signal, type, prop} = localSignal;
+                const updateSSFn = () => {
+                    debugger;
+                    sessionStorage.setItem(remoteProp, (<any>signal)[prop!])
+                }
+                updateSSFn();
+            }
+        }
         return {
             resolved: true
         };
             
+    }
+    passToLocal(self: this, newVal){
+
     }
 }
 
