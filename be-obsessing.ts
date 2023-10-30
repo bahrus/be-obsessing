@@ -4,7 +4,7 @@ import {XE} from 'xtal-element/XE.js';
 import {Actions, AllProps, AP, PAP, ProPAP, POA, SessionStorageRule} from './types';
 import {register} from 'be-hive/register.js';
 import {getRemoteProp, getLocalSignal} from 'be-linked/defaults.js';
-import {init} from './api.js';
+import {init, session_storage_item_set} from './api.js';
 init();
 
 export class BeObsessing extends BE<AP, Actions> implements Actions{
@@ -51,6 +51,12 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
                 updateSSFn();
                 signal.addEventListener(type, e => {
                     updateSSFn();
+                });
+                const updateEnhEl = () => {
+                    (<any>signal)[prop!] = sessionStorage.getItem(remoteProp)
+                }
+                window.addEventListener(session_storage_item_set, e => {
+                    updateEnhEl();
                 })
             }
         }
@@ -59,9 +65,7 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
         };
             
     }
-    passToLocal(self: this, newVal){
 
-    }
 }
 
 export interface BeObsessing extends AllProps{}

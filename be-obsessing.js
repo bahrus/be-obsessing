@@ -2,7 +2,7 @@ import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
 import { getRemoteProp, getLocalSignal } from 'be-linked/defaults.js';
-import { init } from './api.js';
+import { init, session_storage_item_set } from './api.js';
 init();
 export class BeObsessing extends BE {
     static get beConfig() {
@@ -45,13 +45,17 @@ export class BeObsessing extends BE {
                 signal.addEventListener(type, e => {
                     updateSSFn();
                 });
+                const updateEnhEl = () => {
+                    signal[prop] = sessionStorage.getItem(remoteProp);
+                };
+                window.addEventListener(session_storage_item_set, e => {
+                    updateEnhEl();
+                });
             }
         }
         return {
             resolved: true
         };
-    }
-    passToLocal(self, newVal) {
     }
 }
 const tagName = 'be-obsessing';
