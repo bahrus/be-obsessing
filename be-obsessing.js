@@ -34,15 +34,17 @@ export class BeObsessing extends BE {
         for (const rule of sessionStorageRules) {
             const { key } = rule;
             if (key === undefined) {
-                const localSignal = await getLocalSignal(enhancedElement);
+                const localSignal = await getLocalSignal(enhancedElement, true);
                 const remoteProp = getRemoteProp(enhancedElement);
                 console.log({ localSignal, remoteProp });
                 const { signal, type, prop } = localSignal;
                 const updateSSFn = () => {
-                    debugger;
                     sessionStorage.setItem(remoteProp, signal[prop]);
                 };
                 updateSSFn();
+                signal.addEventListener(type, e => {
+                    updateSSFn();
+                });
             }
         }
         return {
