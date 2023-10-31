@@ -1,4 +1,11 @@
-# be-obsessing [TODO]
+# be-obsessing
+
+Elevate local property value to host or upstream peer element when user initiates event.
+
+[![NPM version](https://badge.fury.io/js/be-obsessing.png)](http://badge.fury.io/js/be-obsessing)
+[![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-obsessing?style=for-the-badge)](https://bundlephobia.com/result?p=be-obsessing)
+<img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-obsessing?compression=gzip">
+[![Playwright Tests](https://github.com/bahrus/be-obsessing/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-obsessing/actions/workflows/CI.yml)
 
 Read and update session storage (parsing via JSON).
 
@@ -31,3 +38,37 @@ Watches for content property, and keeps in sync.
 ... reads JSON.parse(sessionStorage.getItem('myStorage')).mySubsection and passes to content property.  Same in reverse (but faster to set oMeta.beValueAdded.value = ...)
 
 Watches for content property, and keeps in sync 
+
+## Viewing Demos Locally
+
+Any web server that can serve static files will do, but...
+
+1.  Install git.
+2.  Fork/clone this repo.
+3.  Install node.js.
+4.  Open command window to folder where you cloned this repo.
+5.  > npm install
+6.  > npm run serve
+7.  Open http://localhost:3030/demo/ in a modern browser.
+
+## Running Tests
+
+```
+> npm run test
+```
+
+## Using from ESM Module:
+
+```JavaScript
+import 'be-obsessing/be-obsessing.js';
+```
+
+## Using from CDN:
+
+```html
+<script type=module crossorigin=anonymous>
+    import 'https://esm.run/be-obsessing';
+</script>
+```
+
+
