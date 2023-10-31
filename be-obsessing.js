@@ -25,12 +25,12 @@ export class BeObsessing extends BE {
         if ((about || About) !== undefined) {
             const { prsAbout } = await import('./prsAbout.js');
             sessionStorageRules = prsAbout(self);
-            console.log({ sessionStorageRules });
         }
         return {
             sessionStorageRules
         };
     }
+    #ignoreNextSetItemUpdate = new Set();
     async hydrate(self) {
         const { enhancedElement, sessionStorageRules } = self;
         for (const rule of sessionStorageRules) {
@@ -38,11 +38,10 @@ export class BeObsessing extends BE {
             //if(key === undefined){
             const localSignal = await getLocalSignal(enhancedElement, true);
             const remoteProp = key || getRemoteProp(enhancedElement);
-            console.log({ localSignal, remoteProp });
             const { signal, type, prop } = localSignal;
             const updateSSFn = () => {
                 const val = signal[prop];
-                console.log({ val });
+                this.#ignoreNextSetItemUpdate.add(remoteProp);
                 sessionStorage.setItem(remoteProp, val);
             };
             signal.addEventListener(type, (e) => {
@@ -52,7 +51,10 @@ export class BeObsessing extends BE {
                 let val = sessionStorage.getItem(remoteProp);
                 if (val !== null)
                     val = val[remoteProp];
-                console.log({ val });
+                if (this.#ignoreNextSetItemUpdate.has(remoteProp)) {
+                    this.#ignoreNextSetItemUpdate.delete(remoteProp);
+                    return;
+                }
                 signal[prop] = val;
             };
             window.addEventListener(session_storage_item_set, e => {
