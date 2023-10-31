@@ -1,6 +1,6 @@
 {
   "name": "be-obsessing",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Read and update session storage (parsing via JSON).",
   "main": "be-obsessing.js",
   "module": "be-obsessing.js",
