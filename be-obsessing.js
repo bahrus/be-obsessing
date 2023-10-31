@@ -25,6 +25,7 @@ export class BeObsessing extends BE {
         if ((about || About) !== undefined) {
             const { prsAbout } = await import('./prsAbout.js');
             sessionStorageRules = prsAbout(self);
+            console.log({ sessionStorageRules });
         }
         return {
             sessionStorageRules
@@ -34,38 +35,37 @@ export class BeObsessing extends BE {
         const { enhancedElement, sessionStorageRules } = self;
         for (const rule of sessionStorageRules) {
             const { key } = rule;
-            if (key === undefined) {
-                const localSignal = await getLocalSignal(enhancedElement, true);
-                const remoteProp = getRemoteProp(enhancedElement);
-                console.log({ localSignal, remoteProp });
-                const { signal, type, prop } = localSignal;
-                const updateSSFn = () => {
-                    debugger;
-                    sessionStorage.setItem(remoteProp, signal[prop]);
-                };
-                signal.addEventListener(type, e => {
-                    updateSSFn();
-                });
-                const updateEnhEl = () => {
-                    signal[prop] = sessionStorage.getItem(remoteProp);
-                };
-                window.addEventListener(session_storage_item_set, e => {
-                    const key = e.detail.key;
-                    if (key !== remoteProp)
-                        return;
-                    updateEnhEl();
-                });
-                const localVal = signal[prop];
-                const remoteVal = sessionStorage.getItem(remoteProp);
-                const tieBreak = breakTie(localVal, remoteVal);
-                const { val, winner } = tieBreak;
-                if (winner === 'local') {
-                    updateSSFn();
-                }
-                else if (winner === 'remote') {
-                    updateEnhEl();
-                }
+            //if(key === undefined){
+            const localSignal = await getLocalSignal(enhancedElement, true);
+            const remoteProp = key || getRemoteProp(enhancedElement);
+            console.log({ localSignal, remoteProp });
+            const { signal, type, prop } = localSignal;
+            const updateSSFn = () => {
+                sessionStorage.setItem(remoteProp, signal[prop]);
+            };
+            signal.addEventListener(type, (e) => {
+                updateSSFn();
+            });
+            const updateEnhEl = () => {
+                signal[prop] = sessionStorage.getItem(remoteProp);
+            };
+            window.addEventListener(session_storage_item_set, e => {
+                const key = e.detail.key;
+                if (key !== remoteProp)
+                    return;
+                updateEnhEl();
+            });
+            const localVal = signal[prop];
+            const remoteVal = sessionStorage.getItem(remoteProp);
+            const tieBreak = breakTie(localVal, remoteVal);
+            const { val, winner } = tieBreak;
+            if (winner === 'local') {
+                updateSSFn();
             }
+            else if (winner === 'remote') {
+                updateEnhEl();
+            }
+            //}
         }
         return {
             resolved: true

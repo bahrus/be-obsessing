@@ -31,6 +31,7 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
         if((about || About) !== undefined){
             const {prsAbout} = await import('./prsAbout.js');
             sessionStorageRules = prsAbout(self);
+            console.log({sessionStorageRules});
         }
         return {
             sessionStorageRules
@@ -41,17 +42,16 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
         const {enhancedElement, sessionStorageRules} = self;
         for(const rule of sessionStorageRules!){
             const {key} = rule;
-            if(key === undefined){
+            //if(key === undefined){
                 const localSignal = await getLocalSignal(enhancedElement, true);
-                const remoteProp = getRemoteProp(enhancedElement);
+                const remoteProp = key || getRemoteProp(enhancedElement);
                 console.log({localSignal, remoteProp});
                 const {signal, type, prop} = localSignal;
                 const updateSSFn = () => {
-                    debugger;
                     sessionStorage.setItem(remoteProp, (<any>signal)[prop!])
                 }
 
-                signal.addEventListener(type, e => {
+                signal.addEventListener(type, (e: Event) => {
                     updateSSFn();
                 });
                 const updateEnhEl = () => {
@@ -72,7 +72,7 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
                     updateEnhEl();
                 }
                 
-            }
+            //}
         }
         return {
             resolved: true
