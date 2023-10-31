@@ -47,6 +47,7 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
                 console.log({localSignal, remoteProp});
                 const {signal, type, prop} = localSignal;
                 const updateSSFn = () => {
+                    debugger;
                     sessionStorage.setItem(remoteProp, (<any>signal)[prop!])
                 }
 

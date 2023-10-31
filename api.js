@@ -47,8 +47,11 @@ export function init(win = window) {
                     boundSetItem(key, val);
                     break;
                 case 'object':
+                    const newVal = JSON.stringify(val);
+                    if (newVal === oldVal)
+                        return;
                     aWin[cache][key] = val;
-                    boundSetItem(key, JSON.stringify(val));
+                    boundSetItem(key, newVal);
                     break;
                 default:
                     throw "Not Implemented";
