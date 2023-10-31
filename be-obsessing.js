@@ -41,13 +41,19 @@ export class BeObsessing extends BE {
             console.log({ localSignal, remoteProp });
             const { signal, type, prop } = localSignal;
             const updateSSFn = () => {
-                sessionStorage.setItem(remoteProp, signal[prop]);
+                const val = signal[prop];
+                console.log({ val });
+                sessionStorage.setItem(remoteProp, val);
             };
             signal.addEventListener(type, (e) => {
                 updateSSFn();
             });
             const updateEnhEl = () => {
-                signal[prop] = sessionStorage.getItem(remoteProp);
+                let val = sessionStorage.getItem(remoteProp);
+                if (val !== null)
+                    val = val[remoteProp];
+                console.log({ val });
+                signal[prop] = val;
             };
             window.addEventListener(session_storage_item_set, e => {
                 const key = e.detail.key;
