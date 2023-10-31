@@ -4,6 +4,7 @@ import {XE} from 'xtal-element/XE.js';
 import {Actions, AllProps, AP, PAP, ProPAP, POA, SessionStorageRule} from './types';
 import {register} from 'be-hive/register.js';
 import {getRemoteProp, getLocalSignal} from 'be-linked/defaults.js';
+import {breakTie} from 'be-linked/breakTie.js';
 import {init, session_storage_item_set} from './api.js';
 init();
 
@@ -48,18 +49,28 @@ export class BeObsessing extends BE<AP, Actions> implements Actions{
                 const updateSSFn = () => {
                     sessionStorage.setItem(remoteProp, (<any>signal)[prop!])
                 }
-                updateSSFn();
+
                 signal.addEventListener(type, e => {
                     updateSSFn();
                 });
                 const updateEnhEl = () => {
-                    (<any>signal)[prop!] = sessionStorage.getItem(remoteProp)
+                    (<any>signal)[prop!] = sessionStorage.getItem(remoteProp);
                 }
                 window.addEventListener(session_storage_item_set, e => {
                     const key = (<any>e).detail.key;
                     if(key !== remoteProp) return;
                     updateEnhEl();
                 });
+                const localVal = (<any>signal)[prop!];
+                const remoteVal = sessionStorage.getItem(remoteProp);
+                const tieBreak = breakTie(localVal, remoteVal)
+                const {val, winner} = tieBreak;
+                if(winner === 'local'){
+                    updateSSFn();
+                }else if(winner === 'remote'){
+                    updateEnhEl();
+                }
+                
             }
         }
         return {

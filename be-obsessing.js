@@ -2,6 +2,7 @@ import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
 import { getRemoteProp, getLocalSignal } from 'be-linked/defaults.js';
+import { breakTie } from 'be-linked/breakTie.js';
 import { init, session_storage_item_set } from './api.js';
 init();
 export class BeObsessing extends BE {
@@ -41,7 +42,6 @@ export class BeObsessing extends BE {
                 const updateSSFn = () => {
                     sessionStorage.setItem(remoteProp, signal[prop]);
                 };
-                updateSSFn();
                 signal.addEventListener(type, e => {
                     updateSSFn();
                 });
@@ -54,6 +54,16 @@ export class BeObsessing extends BE {
                         return;
                     updateEnhEl();
                 });
+                const localVal = signal[prop];
+                const remoteVal = sessionStorage.getItem(remoteProp);
+                const tieBreak = breakTie(localVal, remoteVal);
+                const { val, winner } = tieBreak;
+                if (winner === 'local') {
+                    updateSSFn();
+                }
+                else if (winner === 'remote') {
+                    updateEnhEl();
+                }
             }
         }
         return {
